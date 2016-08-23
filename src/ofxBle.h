@@ -1,12 +1,13 @@
 #ifndef _OFXBLE_H
 #define _OFXBLE_H
 
+
 #include "ofMain.h"
 #include "apitypes.h"
 #include "ofxBleAcceleratorEvent.h"
 
-#define OFXBLE_LINUX_BLE112
-
+//#define OFXBLE_LINUX_BLE112
+#define OFXBLE_WINDOWS_BLE112
 
 // source: http://stackoverflow.com/a/5920028/3061383
 #ifdef _WIN64
@@ -15,8 +16,12 @@
 
 #elif _WIN32
     //define something for Windows (32-bit)
-    #error "_WIN32 not implemented"
-
+    //#error "_WIN32 not implemented"
+    #ifdef OFXBLE_WINDOWS_BLE112
+        #include "ofxBle_windows_ble112.h"
+    #elif defined(OFXBLE_WINDOWS_BLUEZ)
+        #error "ofxBle on linux bluez not implemented"
+    #endif
 #elif __APPLE__
     #error "__APPLE__ not implemented"
     #include <TargetConditionals.h>

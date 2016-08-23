@@ -1,12 +1,16 @@
-#include "testApp.h"
-#include "ofAppGlutWindow.h"
+
+#define POCO_NO_UNWINDOWS
+#include "ofMain.h"
+#include "ofApp.h"
 
 
 
 //--------------------------------------------------------------
 int main(){
-	ofAppGlutWindow window; // create a window
-	// set width, height, mode (OF_WINDOW or OF_FULLSCREEN)
-	ofSetupOpenGL(&window, WIN_WIDTH, WIN_HEIGTH, OF_WINDOW);
-	ofRunApp(new testApp()); // start the app
+	ofSetupOpenGL(700, 700, OF_WINDOW);			// <-------- setup the GL context
+
+												// this kicks off the running of my app
+												// can be OF_WINDOW or OF_FULLSCREEN
+												// pass in width and height too:
+	ofRunApp(new ofApp());
 }

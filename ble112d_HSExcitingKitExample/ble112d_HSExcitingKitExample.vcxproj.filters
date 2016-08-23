@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\ofApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxBle.cpp">
+      <Filter>addons\ofxBle\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ofxBleAcceleratorEvent.cpp">
+      <Filter>addons\ofxBle\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\ble112\src\cmd_def.c">
+      <Filter>addons\ofxBle\libs\ble112\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\ble112\src\commands.c">
+      <Filter>addons\ofxBle\libs\ble112\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\ble112\src\config.c">
+      <Filter>addons\ofxBle\libs\ble112\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libs\ble112\src\utils.c">
+      <Filter>addons\ofxBle\libs\ble112\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Bled112Serial.cpp">
+      <Filter>addons\ofxBle\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons">
+      <UniqueIdentifier>{1c82b7f2-a0e3-4583-9804-ee8f50f7fcdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxBle">
+      <UniqueIdentifier>{c26ea31a-38f3-4ddc-b6db-cf1bd86f2326}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxBle\src">
+      <UniqueIdentifier>{9cff61eb-7708-4b7b-955b-4880db90bfbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxBle\libs">
+      <UniqueIdentifier>{dab049ba-1d83-4ea4-9dac-a433db7e3df0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxBle\libs\ble112">
+      <UniqueIdentifier>{19ef7c7c-ba5f-46e1-8ccf-961137d9b23b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxBle\libs\ble112\src">
+      <UniqueIdentifier>{3a58f6bf-6048-4033-8e42-47dd397843a8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ofApp.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxBle.h">
+      <Filter>addons\ofxBle\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxBleAcceleratorEvent.h">
+      <Filter>addons\ofxBle\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ofxBle_windows_ble112.h">
+      <Filter>addons\ofxBle\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\ble112\src\apitypes.h">
+      <Filter>addons\ofxBle\libs\ble112\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\ble112\src\cmd_def.h">
+      <Filter>addons\ofxBle\libs\ble112\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\ble112\src\config.h">
+      <Filter>addons\ofxBle\libs\ble112\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libs\ble112\src\utils.h">
+      <Filter>addons\ofxBle\libs\ble112\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Bled112Serial.h">
+      <Filter>addons\ofxBle\src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="icon.rc" />
+  </ItemGroup>
+</Project>

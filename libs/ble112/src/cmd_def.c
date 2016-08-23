@@ -270,75 +270,91 @@ const struct ble_msg * ble_get_msg_hdr(struct ble_header hdr)
 
     return ble_find_msg_hdr(hdr);
 }
-void ble_send_message(uint8 msgid,...)
+
+void ble_send_message(uint8 msgid, ...)
 {
-    uint32 i;
-    uint32 u32;
-    uint16 u16;
-    uint8  u8;
-    struct ble_cmd_packet packet;
-    uint8 *b=(uint8 *)&packet.payload;
-    uint8 *hw;
-    uint8 *data_ptr=0;
-    uint16 data_len=0;
-    va_list va;
-    va_start(va,msgid);
+	uint32 i;
+	uint32 u32;
+	uint16 u16;
+	uint8  u8;
 
-    i=apis[msgid].params;
-    packet.header=apis[msgid].hdr;
-    while(i)
-    {
+	struct ble_cmd_packet packet;
+	uint8 *b = (uint8 *)&packet.payload;
 
-        switch(i&0xF)
-        {
+	uint8 *hw;
+	uint8 *data_ptr = 0;
+	uint16 data_len = 0;
+	va_list va;
+	va_start(va, msgid);
 
-            case 7://int32
-            case 6://uint32
-                u32=va_arg(va,uint32);
-                *b++=u32&0xff;u32>>=8;
-                *b++=u32&0xff;u32>>=8;
-                *b++=u32&0xff;u32>>=8;
-                *b++=u32&0xff;
-                break;
-            case 5://int16
-            case 4://uint16
-                u16=va_arg(va,unsigned);
-                *b++=u16&0xff;u16>>=8;
-                *b++=u16&0xff;
-                break;
-            case 3://int8
-            case 2://uint8
-                u8=va_arg(va,int);
-                *b++=u8&0xff;
-            break;
+	i = apis[msgid].params;
+	packet.header = apis[msgid].hdr;
+	while (i)
+	{
 
-            case 9://string
-            case 8://uint8 array
-                data_len=va_arg(va,int);
-                *b++=data_len;
+		switch (i & 0xF)
+		{
 
-                //assuming default packet<256
-                u16=data_len+packet.header.lolen;
-                packet.header.lolen=u16&0xff;
-                packet.header.type_hilen|=u16>>8;
+		case 7:/*int32*/
+		case 6:/*uint32*/
+			u32 = va_arg(va, uint32);
+			*b++ = u32 & 0xff; u32 >>= 8;
+			*b++ = u32 & 0xff; u32 >>= 8;
+			*b++ = u32 & 0xff; u32 >>= 8;
+			*b++ = u32 & 0xff;
+			break;
+		case 5:/*int16*/
+		case 4:/*uint16*/
+			u16 = va_arg(va, unsigned);
+			*b++ = u16 & 0xff; u16 >>= 8;
+			*b++ = u16 & 0xff;
+			break;
+		case 3:/*int8*/
+		case 2:/*uint8*/
+			u8 = va_arg(va, int);
+			*b++ = u8 & 0xff;
+			break;
 
-                data_ptr=va_arg(va,uint8*);
-            break;
-            case 10://hwaddr
-                hw=va_arg(va,uint8*);
-                *b++=*hw++;
-                *b++=*hw++;
-                *b++=*hw++;
-                *b++=*hw++;
-                *b++=*hw++;
-                *b++=*hw++;
+		case 9:/*string*/
+		case 8:/*uint8 array*/
+			data_len = va_arg(va, int);
+			*b++ = data_len;
 
-            break;
-        }
-        i=i>>4;
-    }
-    va_end(va);    if(bglib_output)bglib_output(sizeof(struct ble_header)+apis[msgid].hdr.lolen,(uint8*)&packet,data_len,(uint8*)data_ptr);
+			u16 = data_len + packet.header.lolen;
+			packet.header.lolen = u16 & 0xff;
+			packet.header.type_hilen |= u16 >> 8;
+
+			data_ptr = va_arg(va, uint8*);
+			break;
+		case 10:/*hwaddr*/
+			hw = va_arg(va, uint8*);
+
+			*b++ = *hw++;
+			*b++ = *hw++;
+			*b++ = *hw++;
+			*b++ = *hw++;
+			*b++ = *hw++;
+			*b++ = *hw++;
+
+			break;
+		case 11:/*uint16 array*/
+			data_len = va_arg(va, int);
+			*b++ = data_len & 0xff;
+			*b++ = data_len >> 8;
+
+			u16 = data_len + packet.header.lolen;
+			packet.header.lolen = u16 & 0xff;
+			packet.header.type_hilen |= u16 >> 8;
+
+			data_ptr = va_arg(va, uint8*);
+			break;
+		}
+		i = i >> 4;
+	}
+	va_end(va);
+	if (bglib_output)bglib_output(sizeof(struct ble_header) + apis[msgid].hdr.lolen, (uint8*)&packet, data_len, (uint8*)data_ptr);
 }
+
 
 static const struct ble_msg* ble_class_system_rsp_handlers[]=
 {

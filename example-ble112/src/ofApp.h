@@ -1,5 +1,5 @@
-#ifndef _TESTAPP_H
-#define _TESTAPP_H
+#ifndef _OFAPP_H
+#define _OFAPP_H
 
 
 
@@ -22,7 +22,7 @@
 static const int WIN_WIDTH = 1024;
 static const int WIN_HEIGTH = 768;
 
-class testApp : public ofBaseApp {
+class ofApp : public ofBaseApp {
 	public:
 
 	    Ship myShip;
@@ -71,5 +71,5 @@ class testApp : public ofBaseApp {
 };
 
 
-#endif // _TESTAPP_H
+#endif // _OFAPP_H
 

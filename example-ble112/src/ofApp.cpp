@@ -1,11 +1,13 @@
-#include "testApp.h"
+
+#define POCO_NO_UNWINDOWS
+#include "ofApp.h"
 #include "ofxBleAcceleratorEvent.h"
 
 
 
 
 //------------------------------------------------------------------------------
-void testApp::setup(){
+void ofApp::setup(){
 
     ofSetWindowTitle("ofxBle ble112 example");
     ofBackground(0, 0, 0);
@@ -32,18 +34,18 @@ void testApp::setup(){
 
     // listen to the accelerator events
     ofAddListener(ofxBleAcceleratorEvent::events, this,
-                  &testApp::evtAccelerator);
+                  &ofApp::evtAccelerator);
 
     // fill the window with starts
     createParticles(true);
 
     // start the thread
     printf("thread start");
-    bleThread.startThread(false, true);    // blocking, verbose
+    bleThread.startThread();    // blocking, verbose
 }
 
 //------------------------------------------------------------------------------
-void testApp::evtAccelerator(ofxBleAcceleratorEvent &e) {
+void ofApp::evtAccelerator(ofxBleAcceleratorEvent &e) {
 
     //NOTE: use Y coord for X movement since the accelerometer is easier to hold
     //myShip.setPos(new ofPoint(e.acc_y, myShip.getY()));
@@ -69,7 +71,7 @@ void testApp::evtAccelerator(ofxBleAcceleratorEvent &e) {
 }
 
 //------------------------------------------------------------------------------
-void testApp::update(){
+void ofApp::update(){
 
     // remove particles that have left the screen
     ofRemove(particles, checkParticleDead);
@@ -101,7 +103,7 @@ void testApp::update(){
     // check for ship collisions
     uint16_t myship_upper_y = (myShip.getY());
     uint16_t myship_left_x  = (myShip.getX());
-    uint16_t myship_right_x = (myShip.getX() + (myShip.width));
+    uint16_t myship_right_x = (myShip.getX() + (myShip.getWidth()));
     uint16_t current_ship_upper_y;
     uint16_t current_ship_right_x;
     uint16_t current_ship_left_x;
@@ -110,8 +112,8 @@ void testApp::update(){
     while( ship_iter != enemyShips.end() ){
         currentShip = (*ship_iter);
 
-        current_ship_upper_y = ((*ship_iter).getY() + (*ship_iter).height);
-        current_ship_right_x = (*ship_iter).getX() + (*ship_iter).width;
+        current_ship_upper_y = ((*ship_iter).getY() + (*ship_iter).getHeight());
+        current_ship_right_x = (*ship_iter).getX() + (*ship_iter).getWidth();
         current_ship_left_x  = (*ship_iter).getX();
 
         if( current_ship_upper_y > myship_upper_y ) {
@@ -131,7 +133,7 @@ void testApp::update(){
 }
 
 //------------------------------------------------------------------------------
-void testApp::draw(){
+void ofApp::draw(){
 
     vector<Particle>::iterator it = particles.begin();
     while( it != particles.end() ){
@@ -156,69 +158,69 @@ void testApp::draw(){
 }
 
 //------------------------------------------------------------------------------
-void testApp::keyPressed(int key){
+void ofApp::keyPressed(int key){
 
 }
 
 //------------------------------------------------------------------------------
-void testApp::keyReleased(int key){
+void ofApp::keyReleased(int key){
 
 }
 
 //------------------------------------------------------------------------------
-void testApp::mouseMoved(int x, int y){
+void ofApp::mouseMoved(int x, int y){
 
 }
 
 //------------------------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseDragged(int x, int y, int button){
 
 }
 
 //------------------------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button){
+void ofApp::mousePressed(int x, int y, int button){
 
 }
 
 //------------------------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseReleased(int x, int y, int button){
 
 }
 
 //------------------------------------------------------------------------------
-void testApp::windowResized(int w, int h){
+void ofApp::windowResized(int w, int h){
 
 }
 
 //------------------------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
+void ofApp::gotMessage(ofMessage msg){
 
 }
 
 //------------------------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){
+void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
 
 //------------------------------------------------------------------------------
-void testApp::exit() {
+void ofApp::exit() {
 
     // stop the thread
     bleThread.stopThread();
 }
 
 //------------------------------------------------------------------------------
-bool testApp::checkParticleDead( Particle &p ){
+bool ofApp::checkParticleDead( Particle &p ){
     return p.getY() > WIN_HEIGTH;
 }
 
 //------------------------------------------------------------------------------
-bool testApp::checkShipDead( Ship &sp ){
+bool ofApp::checkShipDead( Ship &sp ){
     return sp.getY() > WIN_HEIGTH;
 }
 
 //------------------------------------------------------------------------------
-void testApp::createParticles( bool startupMode ) {
+void ofApp::createParticles( bool startupMode ) {
 
     float rnd;
     float start_y = -20;
@@ -256,7 +258,7 @@ void testApp::createParticles( bool startupMode ) {
 }
 
 //------------------------------------------------------------------------------
-void testApp::createEnemyShips( ) {
+void ofApp::createEnemyShips( ) {
 
 
     float secs_past_last_ship = float(clock () - last_ship_created_time) /  CLOCKS_PER_SEC;

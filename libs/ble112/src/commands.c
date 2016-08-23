@@ -194,7 +194,11 @@ void ble_rsp_gap_set_adv_data(const struct ble_msg_gap_set_adv_data_rsp_t *msg) 
 }
 
 void ble_rsp_gap_set_scan_parameters(const struct ble_msg_gap_set_scan_parameters_rsp_t *msg) {
-
+	printf("[<] ble_rsp_gap_set_scan_parameters\n");
+	if (msg->result != 0) {
+		setFlag(app_state, APP_COMMAND_ERROR);
+	}
+	clearFlag(app_state, APP_COMMAND_PENDING);
 }
 
 void ble_rsp_gap_set_directed_connectable_mode(const struct ble_msg_gap_set_directed_connectable_mode_rsp_t *msg) {
@@ -226,6 +230,8 @@ void ble_rsp_system_whitelist_remove(const struct ble_msg_system_whitelist_remov
 }
 
 void ble_rsp_system_reset(const void* nul) {
+	printf("[<] ble_rsp_system_reset done\n");
+	clearFlag(app_state, APP_ATTCLIENT_PENDING);
 }
 
 void ble_rsp_system_hello(const void* nul) {
@@ -395,6 +401,7 @@ void ble_rsp_gap_discover(const struct ble_msg_gap_discover_rsp_t *msg) {
 
 void ble_rsp_gap_connect_direct(const struct ble_msg_gap_connect_direct_rsp_t *msg) {
     printf("[<] ble_rsp_gap_connect_direct, result: %d\n", msg->result);
+	printf("[<] ble_rsp_gap_connect_direct, handle: %d\n", msg->connection_handle);
     if (msg->result != 0) {
         setFlag(app_state, APP_COMMAND_ERROR);
     }
