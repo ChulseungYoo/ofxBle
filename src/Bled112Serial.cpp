@@ -16,10 +16,6 @@ int Bled112Serial::ReadBleHeader(ble_header& api_header)
 {
 	int retVal{ 0 };
 	retVal = m_serial->readBytes((unsigned char*)&api_header, 4);
-	for (int i = 0; i < retVal; i++)
-	{
-		cout << (unsigned char*)&api_header << endl;
-	}
 	return retVal;
 }
 

@@ -21,12 +21,13 @@ public:
 
 		// Target MAC address
 		// TODO(you): change this to the address of your target BLE board
-		bd_addr target = { 0xc4, 0xbe, 0x84, 0x59, 0x6b, 0xf1 };
+		bd_addr target = { 0xc4, 0xbe, 0x84, 0x58, 0xa1, 0x76 };
 
 		// API needs address reversed
 		reverseArray(target.addr, sizeof(target.addr));
 
 		// BLE settings
+		app_connection.handle = 0xff;
 		app_connection.addr_type = 0;
 		app_connection.target = target;
 		app_connection.conn_interval_min = 80;      /*100ms*/
@@ -45,17 +46,34 @@ public:
 		app_state = 0;
 
 		/* BLE system reset */
-//		printf("[>] ble_cmd_system_reset\n");
-//		ble_cmd_system_reset(0); //Reboot normal program
+		//printf("[>] ble_cmd_system_reset\n");
+		//ble_cmd_system_reset(0); //Reboot normal program
 
-//		if (wait_for_evt() != APP_OK) {
-//			die();
-//		}
+		//if (wait_for_evt() != APP_OK) {
+		//	die();
+		//}
 		// But wait a second until device boots up
-//		printf("    sleep some (wait for device to boot)\n");
-//		sleep(1000);
+		//printf("    sleep some (wait for device to boot)\n");
+		//sleep(1000);
 
 		// get connection status, current command will be handled in response
+		ble_cmd_system_get_connections();
+		if (wait_for_rsp() != APP_OK) {
+			die();
+		}
+		if (wait_for_evt(1000000) != APP_OK)
+		{
+			die();
+		}
+		if (0xff != app_connection.handle)
+		{
+			ble_cmd_connection_disconnect(app_connection.handle);
+		}
+		if (wait_for_rsp() != APP_OK)
+		{
+			die();
+		}
+		
 		printf("[>] ble_cmd_connection_get_status\n");
 		ble_cmd_connection_get_status(0);
 		if (wait_for_rsp() != APP_OK) {
@@ -90,7 +108,8 @@ public:
 
 
 
-	int8 wait_for_rsp() {
+	int8 wait_for_rsp(uint64_t count=100000) {
+		uint64_t waiting = count;
 		ble_header api_header = { 0, };
 
 		setFlag(app_state, APP_COMMAND_PENDING);
@@ -105,7 +124,10 @@ public:
 			}
 			else
 			{
-
+				if (0 == waiting--)
+				{
+					break;
+				}
 			}
 		}
 		return APP_OK;
@@ -113,7 +135,8 @@ public:
 
 
 
-	int8 wait_for_evt() {
+	int8 wait_for_evt(uint64_t count=100000) {
+		uint64_t waiting = count;
 		ble_header api_header={ 0, };
 
 		setFlag(app_state, APP_ATTCLIENT_PENDING);
@@ -128,7 +151,11 @@ public:
 			}
 			else
 			{
-				break;;
+				if (0 == waiting--)
+				{
+					clearFlag(app_state, APP_ATTCLIENT_PENDING);
+					break;
+				}
 			}
 		}
 		return APP_OK;
@@ -192,7 +219,60 @@ public:
 			waitForThread(true);
 		}
 		printf("[>] ble_cmd_connection_disconnect\n");
-		ble_cmd_connection_disconnect(0x01);
+		ble_cmd_connection_disconnect(app_connection.handle);
+		wait_for_rsp();
+		startThread();
+	}
+
+	void EndpointRX()
+	{
+		if (isThreadRunning())
+		{
+			waitForThread(true);
+		}
+		printf("[>] ble_cmd_system_endpoint_rx\n");
+		ble_cmd_system_endpoint_rx(0, 5);
+		wait_for_rsp();
+		startThread();
+	}
+
+	void EndpointTX()
+	{
+		if (isThreadRunning())
+		{
+			waitForThread(true);
+		}
+		printf("[>] ble_cmd_system_endpoint_tx\n");
+		uint8 data[5] = {0x02, 0x05, 0x0f, 0x03, 0x03};
+		uint8array arr_data{ 5, *data };
+		uint8 endpoint=0;
+		ble_cmd_system_endpoint_tx(endpoint, arr_data.len, arr_data.data);
+		wait_for_rsp();
+		startThread();
+	}
+
+	void GATTReadClient()
+	{
+		if (isThreadRunning())
+		{
+			waitForThread(true);
+		}
+		printf("[>] ble_cmd_attclient_read_by_handle\n");
+		ble_cmd_attclient_read_by_handle(app_connection.handle, 0x1f);
+		wait_for_rsp();
+		startThread();
+	}
+
+	void RawTx()
+	{
+		if (isThreadRunning())
+		{
+			waitForThread(true);
+		}
+		printf("[>] ble_cmd_connection_raw_tx\n");
+
+		uint8 data[] = { 0x02, 0x05, 0x0f, 0x03, 0x03 };
+		ble_cmd_connection_raw_tx(app_connection.handle, 5,data);
 		wait_for_rsp();
 		startThread();
 	}
@@ -200,8 +280,6 @@ public:
 private:
 	// Storage to hold recently received data
 	uint8 value_buffer[256] = { 0 };
-	uint64_t m_time;
-	int m_retry_count;
 };
 
 #endif // _OFXBLE_WINDOWS_BLE112_H

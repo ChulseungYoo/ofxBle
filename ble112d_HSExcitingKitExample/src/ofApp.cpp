@@ -18,7 +18,7 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::exit(){
-	bleThread.stopThread();
+	bleThread.waitForThread(true);
 }
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -30,13 +30,21 @@ void ofApp::keyPressed(int key){
 	{
 		bleThread.StopScan();
 	}
-	if ('c' == key)
+	else if ('c' == key)
 	{
 		bleThread.Connect();
 	}
-	if ('d' == key)
+	else if ('d' == key)
 	{
 		bleThread.Disconnect();
+	}
+	else if ('w' == key)
+	{
+		bleThread.RawTx();
+	}
+	else if ('r' == key)
+	{
+		bleThread.GATTReadClient();
 	}
 }
 
